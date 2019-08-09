@@ -25,7 +25,7 @@ class Item
   end
 
   def update_quality
-    self.quality = update_behaviour.update_quality self.quality, self.sell_in
+    self.quality = update_behaviour.update_quality self
   end
   def update_sell_in
     self.sell_in = update_behaviour.update_sell_in self.sell_in
@@ -54,6 +54,15 @@ class UpdateBehaviour
       new_quality = 0
     end
     new_quality 
+  end
+  def update_quality item
+    item.quality-=1
+    if sell_in < 0
+      item.quality  -= 1
+    end
+    if item.quality < 0
+      item.quality = 0
+    end
   end
   def update_sell_in sell_in
     sell_in - 1
