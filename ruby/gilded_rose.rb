@@ -4,14 +4,6 @@ class Item
 
   attr_accessor :update_behaviour
 
-  # def update_item_sell_in
-  #   self.sell_in = @sell_in_behaviour.update_sell_in self.sell_in
-  # end
-
-  # def update_item_quality
-  #   self.quality = @quality_behaviour.update_quality self.quality self.sell_in
-  # end
-
   def choose_behaviour
     if self.is_sulfuras?
       self.update_behaviour = SulfurasBehaviour.new
@@ -25,10 +17,10 @@ class Item
   end
 
   def update_quality
-    self.quality = update_behaviour.update_quality self
+    update_behaviour.update_quality self
   end
   def update_sell_in
-    self.sell_in = update_behaviour.update_sell_in self.sell_in
+    update_behaviour.update_sell_in self
   end
 
   def is_aged_brie?
@@ -45,68 +37,54 @@ class Item
 end
 
 class UpdateBehaviour
-  def update_quality quality, sell_in
-    new_quality = quality-1
-    if sell_in < 0
-      new_quality  -= 1
-    end
-    if new_quality < 0
-      new_quality = 0
-    end
-    new_quality 
-  end
   def update_quality item
     item.quality-=1
-    if sell_in < 0
+    if item.sell_in < 0
       item.quality  -= 1
     end
     if item.quality < 0
       item.quality = 0
     end
   end
-  def update_sell_in sell_in
-    sell_in - 1
+  def update_sell_in item
+    item.sell_in -= 1
   end
 end
 
 class SulfurasBehaviour < UpdateBehaviour
-  def update_quality quality, sell_in
-    quality
+  def update_quality item
   end
-  def update_sell_in sell_in
-    sell_in
+  def update_sell_in item
   end
 end
 
 class AgedBrieBehaviour < UpdateBehaviour
-  def update_quality quality, sell_in
-    if sell_in < 0
-      quality += 1
+  def update_quality item
+    if item.sell_in < 0
+      item.quality += 1
     end
-    quality += 1
-    if quality > 50
-      quality = 50
+    item.quality += 1
+    if item.quality > 50
+      item.quality = 50
     end
-    quality
   end
 end
 
 class BackstagePassBehaviour < UpdateBehaviour
-  def update_quality quality, sell_in
-      quality += 1
-      if sell_in < 10
-        quality += 1
+  def update_quality item
+      item.quality += 1
+      if item.sell_in < 10
+        item.quality += 1
       end
-      if sell_in < 5
-        quality += 1
+      if item.sell_in < 5
+        item.quality += 1
       end
-      if sell_in < 0
-        quality = 0
+      if item.sell_in < 0
+        item.quality = 0
       end
-      if quality > 50
-        quality = 50
+      if item.quality > 50
+        item.quality = 50
       end
-      quality
   end
 end
 
