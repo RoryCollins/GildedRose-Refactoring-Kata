@@ -23,11 +23,10 @@ class Item
     end
   end
 
-  def update_quality
-    update_behaviour.update_quality self
-  end
-  def update_sell_in
+  def update
+    choose_behaviour
     update_behaviour.update_sell_in self
+    update_behaviour.update_quality self
   end
 
   def is_aged_brie?
@@ -55,10 +54,6 @@ class GildedRose
   end
 
   def update_quality
-    @items.each do |item|
-        item.choose_behaviour
-        item.update_sell_in
-        item.update_quality
-    end
+    @items.each {|item| item.update}
   end
 end
