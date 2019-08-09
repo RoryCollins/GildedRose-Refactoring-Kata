@@ -1,3 +1,19 @@
+class BehaviourFactory
+  def get_behaviour item
+    if item.is_sulfuras?
+      SulfurasBehaviour.new
+    elsif item.is_aged_brie?
+      AgedBrieBehaviour.new
+    elsif item.is_backstage_pass?
+      BackstagePassBehaviour.new
+    elsif item.is_conjured_item?
+      ConjuredItemBehaviour.new
+    else
+       UpdateBehaviour.new
+    end
+  end
+end
+
 class UpdateBehaviour
 
   attr_accessor :minimum_quality, :maximum_quality
@@ -5,6 +21,11 @@ class UpdateBehaviour
   def initialize
     @minimum_quality = 0
     @maximum_quality = 50
+  end
+
+  def update item
+    update_sell_in item
+    update_quality item
   end
 
   def update_quality item

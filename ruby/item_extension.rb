@@ -1,5 +1,6 @@
-class Item
+require File.join(File.dirname(__FILE__), 'gilded_rose_behaviour')
 
+class Item
   attr_accessor :update_behaviour
 
   def is_aged_brie?
@@ -18,27 +19,8 @@ class Item
     self.name == "Conjured Mana Cake"
   end
 
-  def choose_behaviour
-    if self.is_sulfuras?
-      self.update_behaviour = SulfurasBehaviour.new
-
-    elsif self.is_aged_brie?
-      self.update_behaviour = AgedBrieBehaviour.new
-
-    elsif self.is_backstage_pass?
-      self.update_behaviour = BackstagePassBehaviour.new
-
-    elsif self.is_conjured_item?
-      self.update_behaviour = ConjuredItemBehaviour.new
-    
-    else
-      self.update_behaviour = UpdateBehaviour.new
-    end
-  end
-
   def update
-    choose_behaviour
-    update_behaviour.update_sell_in self
-    update_behaviour.update_quality self
+    update_behaviour = BehaviourFactory.new.get_behaviour self
+    update_behaviour.update self
   end
 end
