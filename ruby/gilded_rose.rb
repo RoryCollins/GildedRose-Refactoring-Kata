@@ -1,6 +1,36 @@
 require File.join(File.dirname(__FILE__), 'item')
 
 class Item
+
+  attr_accessor :update_behaviour
+
+  # def update_item_sell_in
+  #   self.sell_in = @sell_in_behaviour.update_sell_in self.sell_in
+  # end
+
+  # def update_item_quality
+  #   self.quality = @quality_behaviour.update_quality self.quality self.sell_in
+  # end
+
+  def choose_behaviour
+    if self.is_sulfuras?
+      self.update_behaviour = SulfurasBehaviour.new
+    elsif self.is_aged_brie?
+      self.update_behaviour = AgedBrieBehaviour.new    
+    elsif self.is_backstage_pass?
+      self.update_behaviour = BackstagePassBehaviour.new
+    else
+      self.update_behaviour = UpdateBehaviour.new
+    end
+  end
+
+  def update_quality
+    self.quality = update_behaviour.update_quality self.quality, self.sell_in
+  end
+  def update_sell_in
+    self.sell_in = update_behaviour.update_sell_in self.sell_in
+  end
+
   def is_aged_brie?
     self.name == "Aged Brie"
   end
@@ -14,6 +44,63 @@ class Item
   end
 end
 
+class UpdateBehaviour
+  def update_quality quality, sell_in
+    new_quality = quality-1
+    if sell_in < 0
+      new_quality  -= 1
+    end
+    if new_quality < 0
+      new_quality = 0
+    end
+    new_quality 
+  end
+  def update_sell_in sell_in
+    sell_in - 1
+  end
+end
+
+class SulfurasBehaviour < UpdateBehaviour
+  def update_quality quality, sell_in
+    quality
+  end
+  def update_sell_in sell_in
+    sell_in
+  end
+end
+
+class AgedBrieBehaviour < UpdateBehaviour
+  def update_quality quality, sell_in
+    if sell_in < 0
+      quality += 1
+    end
+    quality += 1
+    if quality > 50
+      quality = 50
+    end
+    quality
+  end
+end
+
+class BackstagePassBehaviour < UpdateBehaviour
+  def update_quality quality, sell_in
+      quality += 1
+      if sell_in < 10
+        quality += 1
+      end
+      if sell_in < 5
+        quality += 1
+      end
+      if sell_in < 0
+        quality = 0
+      end
+      if quality > 50
+        quality = 50
+      end
+      quality
+  end
+end
+
 
 class GildedRose
 
@@ -23,49 +110,9 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      if item.is_aged_brie?
-        item.sell_in -= 1
-        if item.sell_in < 0
-          item.quality += 1
-        end
-        item.quality += 1
-        if item.quality > 50
-          item.quality = 50
-        end
-
-      elsif item.is_sulfuras?
-
-      elsif item.is_backstage_pass?
-        item.sell_in -= 1
-        item.quality += 1
-        if item.sell_in < 10
-          item.quality += 1
-        end
-        if item.sell_in < 5
-          item.quality += 1
-        end
-        if item.sell_in < 0
-          item.quality = 0
-        end
-        if item.quality > 50
-          item.quality = 50
-        end
-      else
-        if item.quality > 0
-          item.quality = item.quality - 1
-        end
-
-        item.sell_in = item.sell_in - 1
-
-        if item.sell_in < 0
-          if item.quality > 0
-            item.quality = item.quality - 1
-          end
-        end
-
-      end
-
-      
+        item.choose_behaviour
+        item.update_sell_in
+        item.update_quality
     end
   end
 end
