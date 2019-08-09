@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'gilded_rose_behaviour')
+require File.join(File.dirname(__FILE__), 'update_behaviour')
 require File.join(File.dirname(__FILE__), 'aged_brie_behaviour')
 require File.join(File.dirname(__FILE__), 'sulfuras_behaviour')
 require File.join(File.dirname(__FILE__), 'conjured_item_behaviour')
