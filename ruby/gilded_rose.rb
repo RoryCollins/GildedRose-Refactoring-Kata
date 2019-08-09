@@ -8,10 +8,16 @@ class Item
   def choose_behaviour
     if self.is_sulfuras?
       self.update_behaviour = SulfurasBehaviour.new
+
     elsif self.is_aged_brie?
-      self.update_behaviour = AgedBrieBehaviour.new    
+      self.update_behaviour = AgedBrieBehaviour.new
+
     elsif self.is_backstage_pass?
       self.update_behaviour = BackstagePassBehaviour.new
+
+    elsif self.is_conjured_item?
+      self.update_behaviour = ConjuredItemBehaviour.new
+    
     else
       self.update_behaviour = UpdateBehaviour.new
     end
@@ -34,6 +40,10 @@ class Item
 
   def is_backstage_pass?
     self.name == "Backstage passes to a TAFKAL80ETC concert"
+  end
+
+  def is_conjured_item?
+    self.name == "Conjured Mana Cake"
   end
 end
 

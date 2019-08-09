@@ -17,6 +17,10 @@ def a_backstage_pass(days, quality)
 	Item.new("Backstage passes to a TAFKAL80ETC concert", days, quality)
 end
 
+def a_conjured_item(days, quality)
+	Item.new("Conjured Mana Cake", days, quality)
+end
+
 
 
 describe GildedRose do
@@ -107,6 +111,25 @@ describe GildedRose do
   		expect(items[0].quality).to eq 50
   	end
   end
+
+  describe "#conjured item special case" do
+  	it "degrades twice as fast as regular item within sell date" do
+  		items = [a_conjured_item(1, 10)]
+  		GildedRose.new(items).update_quality
+  		expect(items[0].quality).to eq 8
+  	end
+  	it "degrades twice as fast as regular item after sell date" do
+  		items = [a_conjured_item(0, 10)]
+  		GildedRose.new(items).update_quality
+  		expect(items[0].quality).to eq 6
+  	end
+  	it "does not degrade below zero quality" do
+  		items = [a_conjured_item(0, 2)]
+  		GildedRose.new(items).update_quality
+  		expect(items[0].quality).to eq 0
+  	end
+  end
+
 
 
 end
