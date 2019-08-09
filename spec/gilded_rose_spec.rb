@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '../gilded_rose')
+require File.join(File.dirname(__FILE__), '../source/gilded_rose')
 
 
 def an_item(days, quality)

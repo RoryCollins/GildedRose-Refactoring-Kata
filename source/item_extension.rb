@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'gilded_rose_behaviour')
+require File.join(File.dirname(__FILE__), 'behaviour/behaviour_factory')
 
 class Item
   attr_accessor :update_behaviour
